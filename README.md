@@ -32,11 +32,16 @@ Claude explains, quizzes, tracks your progress — and only writes code **after*
 
 ## Quick start
 
+Works on **macOS**, **Linux**, and **Windows** (via WSL or Git Bash).
+
 ```bash
 git clone <this-repo-url>
 
 # Run in your project directory (can be empty)
 /path/to/claude-learning-framework/init.sh /path/to/your/project
+
+# Alternative if you get a "permission denied" error:
+bash /path/to/claude-learning-framework/init.sh /path/to/your/project
 ```
 
 The script guides you interactively. Memory files are **auto-linked** to Claude Code — no manual copy needed.
@@ -293,6 +298,9 @@ You can add any rule to `CLAUDE.md`. Some ideas:
 ---
 
 ## FAQ
+
+**Does it work on Windows?**
+Yes, but run the script in WSL or Git Bash (not PowerShell or CMD). macOS and Linux work out of the box.
 
 **Any programming language?**
 Yes. Specify yours during setup, Claude adapts everything.
