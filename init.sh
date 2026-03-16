@@ -202,15 +202,25 @@ render_template() {
         "$template"
 }
 
-# Ensure cours/ and memory/ directories exist
+# Ensure cours/ directory exists
 mkdir -p "${TARGET_DIR}/cours"
-mkdir -p "${TARGET_DIR}/.claude/projects"
 
-# Detect the Claude memory path (project-specific)
-CLAUDE_MEMORY_DIR="${HOME}/.claude/projects"
-# We'll create a generic memory location — user can move it
-MEMORY_TARGET="${TARGET_DIR}/.claude-learning"
-mkdir -p "${MEMORY_TARGET}"
+# Compute Claude Code memory path for this project
+# Claude Code uses: ~/.claude/projects/-path-to-project/memory/
+# where slashes in the absolute path are replaced by dashes
+CLAUDE_PROJECT_SLUG=$(echo "$TARGET_DIR" | sed 's|/|-|g')
+CLAUDE_MEMORY_PATH="${HOME}/.claude/projects/${CLAUDE_PROJECT_SLUG}/memory"
+
+# Also keep a local copy in .claude-learning/ as backup
+LOCAL_MEMORY="${TARGET_DIR}/.claude-learning"
+mkdir -p "${LOCAL_MEMORY}"
+
+# Try to auto-link to Claude Code memory
+MEMORY_LINKED=false
+if [ -d "${HOME}/.claude" ]; then
+    mkdir -p "${CLAUDE_MEMORY_PATH}"
+    MEMORY_LINKED=true
+fi
 
 # --- Generate CLAUDE.md ---
 if [ -f "${TARGET_DIR}/CLAUDE.md" ]; then
@@ -268,9 +278,18 @@ done
 # --- Generate memory files ---
 for tmpl in "${SCRIPT_DIR}/templates/memory/"*.tmpl; do
     filename=$(basename "$tmpl" .tmpl)
-    render_template "$tmpl" > "${MEMORY_TARGET}/${filename}"
+    # Always write local backup
+    render_template "$tmpl" > "${LOCAL_MEMORY}/${filename}"
     echo -e "  ${GREEN}+${NC} .claude-learning/${filename}"
+    # Write to Claude Code memory if available
+    if [ "$MEMORY_LINKED" = true ]; then
+        render_template "$tmpl" > "${CLAUDE_MEMORY_PATH}/${filename}"
+    fi
 done
+
+if [ "$MEMORY_LINKED" = true ]; then
+    echo -e "  ${GREEN}+${NC} Memory auto-linked to Claude Code (${CLAUDE_MEMORY_PATH})"
+fi
 
 # ---------- Summary ----------
 
@@ -292,32 +311,46 @@ else
     echo -e "  ${BOLD}cours/${NC}                — Course files, progress tracking, revision questions"
 fi
 echo -e "  ${BOLD}.claude-learning/${NC}     — Memory files (session state, time tracking)"
+if [ "$MEMORY_LINKED" = true ]; then
+    echo -e "  ${GREEN}*${NC} Memory auto-linked to Claude Code — no manual copy needed!"
+else
+    echo -e "  ${YELLOW}!${NC} Could not auto-link memory (${HOME}/.claude not found)"
+fi
 echo ""
 echo -e "${YELLOW}${BOLD}Next steps:${NC}"
 echo ""
 if [ "$PROJECT_MODE" = "from-scratch" ]; then
-    echo -e "  1. ${BOLD}Start Claude Code${NC} and begin your first session!"
+    STEP=1
+    if [ "$MEMORY_LINKED" = false ]; then
+        echo -e "  ${STEP}. ${BOLD}Link memory files${NC} manually to Claude Code's memory system:"
+        echo -e "     cp .claude-learning/* ${CLAUDE_MEMORY_PATH}/"
+        echo ""
+        STEP=$((STEP + 1))
+    fi
+    echo -e "  ${STEP}. ${BOLD}Start Claude Code${NC} and begin your first session!"
     echo -e "     Claude will help you plan your project step by step,"
     echo -e "     then generate learning modules based on your project plan."
     echo ""
-    echo -e "  2. ${BOLD}Link memory files${NC} to Claude Code's memory system:"
-    echo -e "     Copy .claude-learning/ contents to your Claude project memory path"
-    echo -e "     (usually ~/.claude/projects/<project-path>/memory/)"
-    echo ""
-    echo -e "  3. ${BOLD}Review cours/plan-projet.md${NC} after your first session"
+    STEP=$((STEP + 1))
+    echo -e "  ${STEP}. ${BOLD}Review cours/plan-projet.md${NC} after your first session"
     echo -e "     Claude will fill it in with you during project planning."
 else
-    echo -e "  1. ${BOLD}Review ${CLAUDE_TARGET##*/}${NC} — customize project-specific sections"
+    STEP=1
+    echo -e "  ${STEP}. ${BOLD}Review ${CLAUDE_TARGET##*/}${NC} — customize project-specific sections"
     echo -e "     (architecture, commands, code conventions)"
     echo ""
-    echo -e "  2. ${BOLD}Link memory files${NC} to Claude Code's memory system:"
-    echo -e "     Copy .claude-learning/ contents to your Claude project memory path"
-    echo -e "     (usually ~/.claude/projects/<project-path>/memory/)"
-    echo ""
-    echo -e "  3. ${BOLD}Define your learning modules${NC} in cours/00-programme.md"
+    STEP=$((STEP + 1))
+    if [ "$MEMORY_LINKED" = false ]; then
+        echo -e "  ${STEP}. ${BOLD}Link memory files${NC} manually to Claude Code's memory system:"
+        echo -e "     cp .claude-learning/* ${CLAUDE_MEMORY_PATH}/"
+        echo ""
+        STEP=$((STEP + 1))
+    fi
+    echo -e "  ${STEP}. ${BOLD}Define your learning modules${NC} in cours/00-programme.md"
     echo -e "     (follow the existing template — list what you want to learn)"
     echo ""
-    echo -e "  4. ${BOLD}Start Claude Code${NC} and begin a session!"
+    STEP=$((STEP + 1))
+    echo -e "  ${STEP}. ${BOLD}Start Claude Code${NC} and begin a session!"
     echo -e "     Claude will automatically enter teaching mode."
 fi
 echo ""
