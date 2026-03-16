@@ -1,0 +1,36 @@
+# CI Pipeline — Verification Checklist
+
+**Runs at every checkpoint 2 (end of module) and every session startup.**
+**Derniere mise a jour** : {{TODAY}}
+
+---
+
+## STAGE 1 — NUMBERING (no gaps, no duplicates)
+
+- [ ] revision-express.md questions numbered sequentially
+- [ ] Course files index in README.md matches actual files on disk
+- [ ] Modules in 00-programme.md numbered sequentially
+- [ ] Axes in suivi-progression.md numbered sequentially
+
+## STAGE 2 — COUNTS MATCH
+
+- [ ] Validated concepts count in memory matches completed modules in 00-programme.md
+- [ ] Course files listed in README.md = actual course files on disk
+- [ ] Questions count in README.md = last question number in revision-express.md
+
+## STAGE 3 — CROSS-FILE CONSISTENCY
+
+- [ ] Module statuses match across 00-programme.md, README.md, and memory
+- [ ] Each completed module has: course file + revision questions + progress axis entry
+- [ ] Weakness levels match between suivi-progression.md and memory
+- [ ] Memory state reflects current session accurately
+
+## STAGE 4 — COMPLETENESS
+
+- [ ] Every axis in suivi-progression.md has a sub-concepts TABLE
+- [ ] Every course file has required sections (header, summary, prerequisites)
+- [ ] No TODO or placeholder text in tracking files
+
+## STAGE 5 — TIMESTAMPS
+
+- [ ] All "Derniere mise a jour" dates = today's date during active session

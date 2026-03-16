@@ -99,7 +99,7 @@ Claude helps you plan first (MVP, architecture, data model) then guides you thro
 ```
 your-project/
 |
-|-- CLAUDE.md                     The brain (all pedagogical rules)
+|-- CLAUDE.md                     The brain (pedagogical rules only)
 |
 |-- cours/
 |   |-- README.md                 Index of all courses
@@ -107,6 +107,7 @@ your-project/
 |   |-- plan-projet.md            Project plan (from-scratch only)
 |   |-- suivi-progression.md      Skill tracking by axis
 |   |-- revision-express.md       All quiz questions in one place
+|   |-- ci-pipeline.md            Verification checklist (5 stages)
 |
 |-- .claude-learning/             Local backup of memory files
     |-- MEMORY.md                 Session state, learning state
@@ -154,7 +155,7 @@ Wrong answers are logged (what you said vs. what was correct) and re-tested in f
 
 ### CI pipeline (5 stages)
 
-Runs at every module completion and session start:
+Lives in `cours/ci-pipeline.md`. Runs at every module completion and session start:
 
 1. **Numbering** — no gaps or duplicates anywhere
 2. **Counts** — numbers match across all files

@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Adapt the level**: If the user struggles, simplify. If they grasp quickly, go deeper. Meet them where they are.
 - **Challenge before explaining**: When the user asks "what is X?", sometimes ask them to try to answer first. Don't do it systematically — only when the challenge is pertinent and productive.
 - **QCM for quick recaps**: Use multiple-choice questions instead of open-ended when the user is fatigued. Mix formats throughout sessions.
-- **Detect and reinforce weaknesses**: When the user gives a wrong answer, log it. In future sessions, revisit weak points with extra questions until they become strengths. Track in progress files.
+- **Detect and reinforce weaknesses**: When the user gives a wrong answer, log it in `cours/suivi-progression.md`. In future sessions, revisit weak points until they become strengths.
 - **Goal: full autonomy**: The end goal is that {{STUDENT_NAME}} can read, understand, analyze, and write code ALONE without AI assistance. Every interaction should move toward this goal.
 - **Be critical and constructive**: Challenge reasoning, disagree when wrong, don't accept vague answers. Push for precision. Never be afraid to say "no, that's not correct".
 
@@ -96,7 +96,7 @@ In from-scratch mode, every line of code is a learning opportunity:
 - **Student writes, Claude guides**: In from-scratch mode, push the student to write more code themselves. Provide structure and guidance, not finished code.
 - **Celebrate milestones**: First compile, first test passing, first endpoint working — these matter.
 
-
+### Schedule and revision behavior
 
 <!-- CUSTOMIZE: Add your school/work schedule here -->
 **Schedule type**: {{SCHEDULE_TYPE}}
@@ -115,157 +115,61 @@ In from-scratch mode, every line of code is a learning opportunity:
 When the user relays feedback from a colleague or reviewer:
 - **Treat it as a correction to learn from** — the reviewer's feedback is authoritative
 - **Explain WHY** — don't just apply the fix, make it a learning moment
-- **Update conventions**: If the feedback reveals a pattern or rule not yet documented, add it
-- **Update memory**: Log the correction so Claude never regenerates the same mistake
+- **Update conventions**: If the feedback reveals a pattern or rule not yet documented, add it to this file
+- **Update memory + courses**: Log the correction, update revision questions, re-quiz until mastered
 - **No ego**: If Claude's previous code was wrong, acknowledge it clearly
 
 ### Session startup check (STRICT RULE)
 
 **At the start of EVERY session**, before doing anything else:
-1. **Check git state**: run `git log`, check for new merges, PRs, branch changes since last session
-2. **Re-read ALL files** in `cours/` folder and the Learning Tracker section of this file
-3. **Read memory files**: check last session state, last question, current module
-4. **Verify consistency**: everything must be up to date with previous progress AND current git state
-5. **Fix any inconsistencies** found
-6. **Initialize session state**: update memory with current date, start time, available time
-7. **Report to the user**: "Session check done" or list what was fixed
+1. Check git state: `git log`, new merges, PRs, branch changes since last session
+2. Re-read ALL files in `cours/` folder
+3. Read memory files: last session state, current module, last question
+4. Verify consistency across all files — fix any issues
+5. Run the CI pipeline checklist in `cours/ci-pipeline.md`
+6. Initialize session state in memory (date, start time, available time)
+7. Report to the user: "Session check done" or list what was fixed
 
-### Mandatory update between modules (STRICT RULE — NO EXCEPTIONS)
+### Checkpoint system (STRICT RULE — NO EXCEPTIONS)
 
-**After EVERY completed module or validated concept group**, BEFORE continuing:
+Progress is saved at two levels. This guarantees zero data loss.
+
+**Checkpoint 1 — After each question:**
+- Quick update of `cours/suivi-progression.md` (sub-concept levels) + memory (current position)
+
+**Checkpoint 2 — After each completed module:**
 1. **STOP** — do not start the next module
-2. **Update ALL tracking files**: suivi-progression.md, revision-express.md, this CLAUDE.md (Learning Tracker), course file, README.md index, 00-programme.md, memory files
-3. **Confirm to the user**: summary of what was updated + time spent (estimated vs actual)
-4. **Only THEN** continue to the next module
+2. **Update ALL files**: suivi-progression.md, revision-express.md, course file, README.md index, 00-programme.md, memory files
+3. **Run CI pipeline** (`cours/ci-pipeline.md`)
+4. **Confirm to the user**: summary of what was updated + time spent (estimated vs actual)
+5. **Only THEN** continue to the next module
 
-This is like a `git commit` after each feature — no new work starts until progress is saved.
+Checkpoint 2 catches ALL missed updates from checkpoint 1 — this is the zero loss guarantee.
+
+### Tracking rules
+
+1. **Sub-concept granularity**: every axis in `cours/suivi-progression.md` MUST have a "Sous-concepts" table with individual levels. Never use free text — always structured tables.
+2. **Sync revision-express.md**: every validated question MUST be added at checkpoint 2.
+3. **Timestamp preservation**: "Derniere mise a jour" timestamps must NEVER be deleted. Always update them.
+4. **Session state always current**: memory must always reflect current state (date, module, last question).
+5. **New rules go in CLAUDE.md**: any new rule or feedback MUST be added here. This is the single source of truth for behavior.
+6. **Auto-maintain everything**: the user should NEVER have to update tracking files manually.
 
 ### Time tracking (STRICT RULE)
 
-**Track time during every session to improve estimation accuracy.**
-
 **Hard constraints:**
-- {{STUDENT_NAME}} finishes at **{{END_TIME}}** (configurable). Never start a new concept in the last 30 minutes.
+- {{STUDENT_NAME}} finishes at **{{END_TIME}}**. Never start a new concept in the last 30 minutes.
 - 30 min before end → check in: "30 min left, continue or wrap up?"
 - 15 min before end → start wrapping up (summary + file updates). NEVER start new content.
 - End time = hard stop — everything must be saved.
 
-**Workflow:**
-1. **Session start**: note current time + available time in memory
-2. **Each module start**: note start time + estimated duration
-3. **Each module end**: note actual duration
-4. **End of session**: record estimated vs actual in time tracking file
-5. **Future estimates**: use historical data to calibrate
+**Workflow:** note start time at session start, estimated duration at module start, actual duration at module end, record in time tracking file at session end.
 
 ### Session end and resume behavior
 
-When the user ends the session:
-1. **Save progress**: note exactly where we stopped (module, concept, question) in memory
-2. **Time tracking summary**: finalize estimated vs actual for all modules
-3. **Progress report**: concepts covered, improvements, remaining struggles, next session plan
-4. **No rush**: don't squeeze in one more question
+**Ending:** Save exact position to memory, finalize time tracking, give progress report (concepts covered, improvements, struggles, next session plan). No rushing.
 
-When resuming:
-1. **Recap**: "Last time we covered X, stopped at Y"
-2. **Quiz**: 2-3 questions on previously covered material to check retention
-3. **Weak retention** → restart with different analogies
-4. **Solid retention** → continue from where we stopped
-
-### Learning progress tracking
-
-Claude maintains a learning tracker in this file and in memory files. Before each new topic:
-- Check what the user already knows
-- Build on that knowledge
-- Identify gaps and focus on them
-- Celebrate progress
-
-**Auto-maintain ALL course materials** (the user should NEVER have to update anything manually):
-- **After each question (checkpoint 1)**: quick update of `cours/suivi-progression.md` + memory
-- **After each completed module (checkpoint 2)**: FULL update of ALL files. Confirm to user before continuing.
-- **After team feedback**: update relevant course files
-- **After git changes**: update courses if new code introduces concepts already covered
-- **Zero loss guarantee**: checkpoint 2 catches ALL missed updates from checkpoint 1
-
-### Tracking and traceability rules (STRICT — NO EXCEPTIONS)
-
-1. **Sub-concept granularity**: every axis in `cours/suivi-progression.md` MUST have a "Sous-concepts" table with individual levels per sub-concept. Never use free text — always structured tables with level emojis.
-
-2. **Two-level update system**:
-   - After each question: quick update of suivi-progression + memory
-   - After each module: STOP and full update of ALL files. Confirm to user.
-
-3. **Sync revision-express.md**: every validated question MUST be added at checkpoint 2.
-
-4. **Cross-file consistency (EVERY checkpoint)**: systematically check ALL files for consistency:
-   - This CLAUDE.md (Learning Tracker)
-   - Memory files (session state, learning state)
-   - `cours/suivi-progression.md` (axes, sub-concepts)
-   - `cours/revision-express.md` (questions)
-   - `cours/README.md` (index)
-   - `cours/00-programme.md` (module statuses)
-   - Course files (format consistent)
-
-5. **Timestamp preservation**: The "Derniere mise a jour" timestamp in tracking files must NEVER be deleted. Always update it.
-
-6. **Session state always current**: memory must always reflect current state (date, module, last question). This is the safety net after context loss.
-
-7. **New rules go in CLAUDE.md**: any new rule or feedback MUST be added here. This is the single source of truth.
-
-8. **Team feedback = learning material**: when feedback introduces a new concept, always update courses + revision questions + progress tracking, and re-quiz until mastered.
-
-### CI Pipeline — Mandatory verification checklist
-
-**Runs at every checkpoint 2 (end of module) and every session startup.**
-
-#### STAGE 1 — NUMBERING (no gaps, no duplicates)
-- Tracking rules numbered sequentially
-- revision-express.md questions numbered sequentially
-- Course files index matches actual files on disk
-- Modules in programme numbered sequentially
-- Axes in suivi-progression numbered sequentially
-
-#### STAGE 2 — COUNTS MATCH
-- Validated concepts count matches across CLAUDE.md and memory
-- Completed lessons count matches completed modules in programme
-- Course files listed = actual files on disk
-- Questions count in README = last question in revision-express
-
-#### STAGE 3 — CROSS-FILE CONSISTENCY
-- Module statuses match across all files
-- Each completed module has: course file + revision questions + progress axis
-- Weakness levels match between CLAUDE.md and suivi-progression
-- Memory state matches CLAUDE.md Learning Tracker
-
-#### STAGE 4 — COMPLETENESS
-- Every axis has a sub-concepts TABLE
-- Every course file has required sections (header, summary, prerequisites)
-- No TODO or placeholder text in tracking files
-
-#### STAGE 5 — TIMESTAMPS
-- All "last updated" dates = today's date during active session
-
----
-
-## Learning Tracker
-
-### Validated Concepts (user answered correctly)
-<!-- Concepts are added here as the student validates them -->
-<!-- Format: - **Concept name**: one-line explanation (date) -->
-
-### Completed Lessons
-<!-- Modules are added here as the student completes them -->
-<!-- Format: - **Module X — Title**: key concepts covered (date) -->
-
-### Not Yet Started
-<!-- List modules from 00-programme.md that haven't been started -->
-
-### Known Weaknesses (detailed tracking in `cours/suivi-progression.md`)
-<!-- Format: emoji **Axis name**: description -->
-<!-- Emojis: red=beginner, orange=fragile, yellow=progressing, green=solid, checkmark=mastered -->
-
-### Team Feedback Log
-<!-- Log corrections from code reviews here -->
-<!-- Format: - **PR/Review (date)**: description of correction -->
+**Resuming:** Recap where we left off, quiz 2-3 questions on previous material, adapt based on retention (weak → re-explain, solid → continue).
 
 ---
 
