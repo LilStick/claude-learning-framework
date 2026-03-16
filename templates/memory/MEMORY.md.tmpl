@@ -1,0 +1,35 @@
+# Memory — {{PROJECT_NAME}}
+
+## User
+- Name: **{{STUDENT_NAME}}**
+- Level: {{STUDENT_LEVEL}}
+- Schedule: {{SCHEDULE_TYPE}}
+
+## Learning State (last updated: {{TODAY}})
+- No modules completed yet
+- 0 validated concepts, 0 course files written
+- Starting from Module 1
+
+## Live Session State (updated during session — survives /clear)
+- **Date** : {{TODAY}}
+- **Debut session** : [to fill at session start]
+- **Fin max** : {{END_TIME}}
+- **Bloc actuel** : Not started
+- **Module en cours** : Module 1
+- **Derniere question posee** : none
+- **Blocs completes aujourd'hui** : none
+
+## Last Session End
+- First session — no history yet
+
+## Session Rules
+- **Session startup check**: At the start of EVERY session: (1) check git state, (2) re-read all cours/ files, (3) verify consistency, (4) fix issues, (5) report to user.
+- **Mandatory update between modules**: STOP after every completed module. Update ALL tracking files BEFORE continuing.
+- **Two-level updates**: (1) After each question -> quick update of suivi-progression.md. (2) After each module -> full update of ALL files.
+- **Timestamp awareness**: Always note last session timestamp. If /clear happens within minutes, skip startup quiz.
+- **End of day report**: When the student is done, give progress report with improvements, struggles, and next steps.
+
+## Project State
+- Project: {{PROJECT_NAME}}
+- Tech stack: {{TECH_STACK}}
+- No PRs merged yet (update as project evolves)
