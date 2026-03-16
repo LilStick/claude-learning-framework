@@ -181,24 +181,30 @@ fi
 
 TODAY=$(date +%Y-%m-%d)
 
+# --- Helper: escape special characters for sed replacement ---
+# Handles: & (back-reference), \ (escape char), | (our delimiter)
+sed_escape() {
+    printf '%s' "$1" | sed -e 's/[&\|\\]/\\&/g'
+}
+
 # --- Helper: replace placeholders in a template ---
 render_template() {
     local template="$1"
     sed \
-        -e "s|{{STUDENT_NAME}}|${STUDENT_NAME}|g" \
-        -e "s|{{LANGUAGE}}|${LANGUAGE}|g" \
-        -e "s|{{PROJECT_NAME}}|${PROJECT_NAME}|g" \
-        -e "s|{{PROJECT_DESC}}|${PROJECT_DESC}|g" \
-        -e "s|{{TECH_STACK}}|${TECH_STACK}|g" \
-        -e "s|{{STUDENT_LEVEL}}|${STUDENT_LEVEL}|g" \
-        -e "s|{{SCHEDULE_TYPE}}|${SCHEDULE_TYPE}|g" \
-        -e "s|{{SCHEDULE_DETAILS}}|${SCHEDULE_DETAILS}|g" \
-        -e "s|{{END_TIME}}|${END_TIME}|g" \
-        -e "s|{{TEAM_CONTEXT}}|${TEAM_CONTEXT}|g" \
-        -e "s|{{PROJECT_MODE}}|${PROJECT_MODE}|g" \
-        -e "s|{{PROJECT_IDEA}}|${PROJECT_IDEA}|g" \
-        -e "s|{{PROJECT_GOALS}}|${PROJECT_GOALS}|g" \
-        -e "s|{{TODAY}}|${TODAY}|g" \
+        -e "s|{{STUDENT_NAME}}|$(sed_escape "$STUDENT_NAME")|g" \
+        -e "s|{{LANGUAGE}}|$(sed_escape "$LANGUAGE")|g" \
+        -e "s|{{PROJECT_NAME}}|$(sed_escape "$PROJECT_NAME")|g" \
+        -e "s|{{PROJECT_DESC}}|$(sed_escape "$PROJECT_DESC")|g" \
+        -e "s|{{TECH_STACK}}|$(sed_escape "$TECH_STACK")|g" \
+        -e "s|{{STUDENT_LEVEL}}|$(sed_escape "$STUDENT_LEVEL")|g" \
+        -e "s|{{SCHEDULE_TYPE}}|$(sed_escape "$SCHEDULE_TYPE")|g" \
+        -e "s|{{SCHEDULE_DETAILS}}|$(sed_escape "$SCHEDULE_DETAILS")|g" \
+        -e "s|{{END_TIME}}|$(sed_escape "$END_TIME")|g" \
+        -e "s|{{TEAM_CONTEXT}}|$(sed_escape "$TEAM_CONTEXT")|g" \
+        -e "s|{{PROJECT_MODE}}|$(sed_escape "$PROJECT_MODE")|g" \
+        -e "s|{{PROJECT_IDEA}}|$(sed_escape "$PROJECT_IDEA")|g" \
+        -e "s|{{PROJECT_GOALS}}|$(sed_escape "$PROJECT_GOALS")|g" \
+        -e "s|{{TODAY}}|$(sed_escape "$TODAY")|g" \
         "$template"
 }
 
