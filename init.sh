@@ -363,22 +363,16 @@ if [ "$PROJECT_MODE" = "from-scratch" ]; then
     echo -e "     Claude will fill it in with you during project planning."
 else
     STEP=1
-    echo -e "  ${STEP}. ${BOLD}Review ${CLAUDE_TARGET##*/}${NC} — customize project-specific sections"
-    echo -e "     (architecture, commands, code conventions)"
-    echo ""
-    STEP=$((STEP + 1))
     if [ "$MEMORY_LINKED" = false ]; then
         echo -e "  ${STEP}. ${BOLD}Link memory files${NC} manually to Claude Code's memory system:"
         echo -e "     cp .claude-learning/* ${CLAUDE_MEMORY_PATH}/"
         echo ""
         STEP=$((STEP + 1))
     fi
-    echo -e "  ${STEP}. ${BOLD}Define your learning modules${NC} in cours/00-programme.md"
-    echo -e "     (follow the existing template — list what you want to learn)"
-    echo ""
-    STEP=$((STEP + 1))
     echo -e "  ${STEP}. ${BOLD}Start Claude Code${NC} and begin a session!"
-    echo -e "     Claude will automatically enter teaching mode."
+    echo -e "     Claude will automatically analyze your codebase, generate"
+    echo -e "     learning modules, progression axes, and project sections."
+    echo -e "     You just validate and start learning."
 fi
 echo ""
 if [ "$HAS_GIT" = false ]; then

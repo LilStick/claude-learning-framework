@@ -246,10 +246,10 @@ The plan lives in `cours/plan-projet.md` and serves as reference for the whole j
 
 ### Existing project
 
-1. Edit `cours/00-programme.md` — define your modules
-2. Edit `cours/suivi-progression.md` — define your skill axes
-3. Customize `CLAUDE.md` — project sections
-4. Run `claude` and start learning
+1. Run `claude` — that's it
+2. Claude analyzes your codebase automatically
+3. Generates modules, skill axes, and project sections
+4. You validate, then start learning
 
 </td>
 <td width="50%">

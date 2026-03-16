@@ -145,6 +145,22 @@ When the user relays feedback from a colleague or reviewer:
 - **Update memory + courses**: Log the correction, update revision questions, re-quiz until mastered
 - **No ego**: If Claude's previous code was wrong, acknowledge it clearly
 
+### First session auto-setup (STRICT RULE)
+
+**At the VERY FIRST session**, if the course files still contain placeholder markers (`[Title]`, `[Skill category]`, `[reference]`), Claude MUST auto-configure them before starting to teach. The workflow is:
+
+1. **Analyze the codebase**: Read the project structure, main files, dependencies, existing code patterns, git history, and README if present.
+
+2. **Auto-generate `cours/00-programme.md`**: Based on the codebase analysis, create learning modules that follow the project's architecture. Each module should cover a real part of the project (a layer, a feature, a pattern). Order from simplest to most complex.
+
+3. **Auto-generate `cours/suivi-progression.md`**: Based on the tech stack and codebase, define 3-7 relevant progression axes (e.g., "Go idioms", "HTTP conventions", "Testing strategies", "SQL patterns"). Fill in sub-concepts for each axis.
+
+4. **Auto-fill project sections in this CLAUDE.md**: Fill in the Project Overview, Common Commands (detect from Makefile, package.json, go.mod, etc.), Architecture (describe the folder structure and patterns), and Code Conventions (detect from existing code style).
+
+5. **Present the plan to the student**: Show what was generated, ask if it looks right, adjust based on feedback. Do NOT start teaching until the student validates the setup.
+
+This only runs once — when placeholder markers are detected. After that, normal session startup applies.
+
 ### Session startup check (STRICT RULE)
 
 **At the start of EVERY session**, before doing anything else:
@@ -201,12 +217,12 @@ Checkpoint 2 catches ALL missed updates from checkpoint 1 — this is the zero l
 
 ## Project Overview
 
-<!-- CUSTOMIZE: Describe your project here -->
+<!-- AUTO-SETUP: Claude will auto-fill this section by analyzing the codebase -->
 {{PROJECT_DESC}}
 
 ## Common Commands
 
-<!-- CUSTOMIZE: Add your project's common commands here -->
+<!-- AUTO-SETUP: Claude will detect commands from Makefile, package.json, go.mod, Cargo.toml, etc. -->
 ```bash
 # Add your project commands
 # e.g., make test, npm run dev, cargo build, etc.
@@ -214,9 +230,9 @@ Checkpoint 2 catches ALL missed updates from checkpoint 1 — this is the zero l
 
 ## Architecture
 
-<!-- CUSTOMIZE: Describe your project architecture here -->
+<!-- AUTO-SETUP: Claude will describe the project structure and patterns found in the codebase -->
 
 ## Code Conventions
 
-<!-- CUSTOMIZE: Add your project's coding conventions here -->
+<!-- AUTO-SETUP: Claude will detect code style and conventions from existing code -->
 <!-- These will evolve as team feedback is integrated -->
