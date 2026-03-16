@@ -4,6 +4,7 @@
 - Name: **{{STUDENT_NAME}}**
 - Level: {{STUDENT_LEVEL}}
 - Schedule: {{SCHEDULE_TYPE}}
+- Interaction language: {{DISPLAY_LANG}}
 
 ## Learning State (last updated: {{TODAY}})
 - No modules completed yet
@@ -11,13 +12,13 @@
 - Starting from Module 1
 
 ## Live Session State (updated during session — survives /clear)
-- **Date** : {{TODAY}}
-- **Debut session** : [to fill at session start]
-- **Fin max** : {{END_TIME}}
-- **Bloc actuel** : Not started
-- **Module en cours** : Module 1
-- **Derniere question posee** : none
-- **Blocs completes aujourd'hui** : none
+- **Date**: {{TODAY}}
+- **Session start**: [to fill at session start]
+- **End time**: {{END_TIME}}
+- **Current block**: Not started
+- **Current module**: Module 1
+- **Last question asked**: none
+- **Blocks completed today**: none
 
 ## Last Session End
 - First session — no history yet
@@ -28,6 +29,7 @@
 - **Two-level updates**: (1) After each question -> quick update of suivi-progression.md. (2) After each module -> full update of ALL files.
 - **Timestamp awareness**: Always note last session timestamp. If /clear happens within minutes, skip startup quiz.
 - **End of day report**: When the student is done, give progress report with improvements, struggles, and next steps.
+- **Language**: ALL interactions and course content must be in {{DISPLAY_LANG}}.
 
 ## Project State
 - Project: {{PROJECT_NAME}}
@@ -38,6 +40,7 @@
 ## From-Scratch State (only if mode = from-scratch)
 - **Project idea**: {{PROJECT_IDEA}}
 - **Learning goals**: {{PROJECT_GOALS}}
+- **Needs project discovery**: {{PROJECT_IDEA}} = "no-idea" means Claude must help find a project first
 - **Planning phase**: not started
 - **Plan validated**: no
 - **Modules generated from plan**: no

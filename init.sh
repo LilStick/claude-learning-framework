@@ -58,6 +58,17 @@ if [ ! -d "${TARGET_DIR}/.git" ]; then
     fi
 fi
 
+# ---------- Language choice ----------
+
+echo ""
+echo -e "${YELLOW}Language for interactions / Langue des interactions :${NC}"
+echo -e "${YELLOW}(e.g., Francais, English, Espanol, Deutsch, Portugues, ...)${NC}"
+read -rp "> " DISPLAY_LANG
+# Default to English if empty
+if [ -z "$DISPLAY_LANG" ]; then
+    DISPLAY_LANG="English"
+fi
+
 # Detect if directory is empty (no source files) — offer "from scratch" mode
 FILE_COUNT=$(find "$TARGET_DIR" -maxdepth 2 -type f \( -name "*.go" -o -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.tsx" -o -name "*.jsx" -o -name "*.rs" -o -name "*.java" -o -name "*.rb" -o -name "*.c" -o -name "*.cpp" -o -name "*.cs" \) 2>/dev/null | head -5 | wc -l)
 PROJECT_MODE="existing"
@@ -68,8 +79,9 @@ if [ "$FILE_COUNT" -eq 0 ]; then
     echo ""
     echo -e "${YELLOW}How do you want to use Learning Mode?${NC}"
     echo "  1) From scratch — I have a project idea and want to build it from zero"
-    echo "  2) Existing project — I'll add code later, just set up learning mode"
-    read -rp "$(echo -e "${YELLOW}Choose [1/2]: ${NC}")" MODE_CHOICE
+    echo "  2) From scratch — I don't have an idea yet, help me find one"
+    echo "  3) Existing project — I'll add code later, just set up learning mode"
+    read -rp "$(echo -e "${YELLOW}Choose [1/2/3]: ${NC}")" MODE_CHOICE
 
     case $MODE_CHOICE in
         1)
@@ -83,6 +95,14 @@ if [ "$FILE_COUNT" -eq 0 ]; then
             read -rp "> " PROJECT_GOALS
             ;;
         2)
+            PROJECT_MODE="from-scratch"
+            PROJECT_IDEA="no-idea"
+            echo ""
+            echo -e "${BLUE}${BOLD}No problem! Claude will help you find a project that fits.${NC}"
+            echo -e "${YELLOW}What's your main learning goal? (e.g., 'learn REST APIs', 'build something concrete', 'practice backend'):${NC}"
+            read -rp "> " PROJECT_GOALS
+            ;;
+        3)
             PROJECT_MODE="existing"
             ;;
         *)
@@ -204,6 +224,7 @@ render_template() {
         -e "s|{{PROJECT_MODE}}|$(sed_escape "$PROJECT_MODE")|g" \
         -e "s|{{PROJECT_IDEA}}|$(sed_escape "$PROJECT_IDEA")|g" \
         -e "s|{{PROJECT_GOALS}}|$(sed_escape "$PROJECT_GOALS")|g" \
+        -e "s|{{DISPLAY_LANG}}|$(sed_escape "$DISPLAY_LANG")|g" \
         -e "s|{{TODAY}}|$(sed_escape "$TODAY")|g" \
         "$template"
 }

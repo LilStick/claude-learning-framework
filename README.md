@@ -80,6 +80,7 @@ Claude helps you plan first (MVP, architecture, data model) then guides you thro
 
 | Question | Example |
 |----------|---------|
+| Interaction language | `Francais`, `English`, `Espanol`, `Deutsch`, ... |
 | Student name | `Alice` |
 | Programming language | `Go`, `Python`, `TypeScript` |
 | Project name | `Review Reminder` |
@@ -89,7 +90,7 @@ Claude helps you plan first (MVP, architecture, data model) then guides you thro
 | Daily end time | `18h30` or `flexible` |
 | Team context | `works with senior devs` or `solo` |
 
-**From-scratch only:** your project idea + learning goal.
+**From-scratch only:** your project idea + learning goal. If you don't have an idea, choose option 2 and Claude will help you find one.
 **Alternance only:** your school weeks (for revision timing).
 
 ---
@@ -191,7 +192,16 @@ When you relay a code review correction, Claude:
 
 When you choose "from scratch", the first sessions are **planning only** — no code.
 
+**Don't have an idea?** Choose option 2 during setup. Claude will ask about your interests, then propose 3-4 project ideas adapted to your level and language. You pick the one that excites you.
+
 ```
+Session 0 (if no idea): Project discovery
+  |
+  |-- Claude asks about your interests
+  |-- Proposes 3-4 project ideas
+  |-- You choose one
+  |
+  v
 Session 1-2: Planning
   |
   |-- Define the problem clearly

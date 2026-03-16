@@ -11,6 +11,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Project**: {{PROJECT_NAME}} — {{PROJECT_DESC}}
 **Tech stack**: {{TECH_STACK}}
 **Level**: {{STUDENT_LEVEL}}
+**Interaction language**: {{DISPLAY_LANG}}
+
+### Language rule (STRICT)
+
+**ALL interactions with the student must be in {{DISPLAY_LANG}}.** This includes: explanations, questions, quiz, feedback, progress reports, and all content written in course files (`cours/`). The only exception is code and technical terms that are universally used in English (e.g., function names, HTTP methods, design pattern names).
 
 ### Core teaching principles
 
@@ -57,6 +62,27 @@ If the project mode is `from-scratch`, the following rules apply IN ADDITION to 
 
 **Project idea**: {{PROJECT_IDEA}}
 **Learning goals**: {{PROJECT_GOALS}}
+
+#### Phase -1 — Project discovery (ONLY if project idea is `no-idea`)
+
+If the project idea is `no-idea`, the student doesn't know what to build yet. The VERY FIRST step is to help them find a project. The workflow is:
+
+1. **Understand the student**: Ask about their interests (games, music, sports, productivity, social?), what excites them in tech, and what they use daily that frustrates them. This is a conversation, not a quiz.
+
+2. **Propose 3-4 project ideas**: Based on their level, language, learning goals, and interests. For each idea, explain:
+   - What it does (one sentence)
+   - Why it's good for learning (which concepts it covers)
+   - Estimated complexity (simple / medium / ambitious)
+   - Example: "A CLI tool that tracks your daily habits — you'd learn file I/O, data structures, and CLI argument parsing"
+
+3. **Let the student choose**: Don't push. If none of the ideas resonate, ask more questions and propose new ones. The student must be excited about their project.
+
+4. **Update the plan**: Once chosen, update `cours/plan-projet.md` with the selected idea and proceed to Phase 0.
+
+Adapt proposals to the student's level:
+- **Beginner**: CLI tools, simple calculators, text-based games, personal trackers
+- **Intermediate**: REST APIs, CRUD apps, chat bots, data dashboards
+- **Advanced**: Real-time systems, multi-service architectures, developer tools
 
 #### Phase 0 — Project planning (BEFORE any coding)
 
@@ -150,7 +176,7 @@ Checkpoint 2 catches ALL missed updates from checkpoint 1 — this is the zero l
 
 1. **Sub-concept granularity**: every axis in `cours/suivi-progression.md` MUST have a "Sous-concepts" table with individual levels. Never use free text — always structured tables.
 2. **Sync revision-express.md**: every validated question MUST be added at checkpoint 2.
-3. **Timestamp preservation**: "Derniere mise a jour" timestamps must NEVER be deleted. Always update them.
+3. **Timestamp preservation**: "Last updated" timestamps must NEVER be deleted. Always update them.
 4. **Session state always current**: memory must always reflect current state (date, module, last question).
 5. **New rules go in CLAUDE.md**: any new rule or feedback MUST be added here. This is the single source of truth for behavior.
 6. **Auto-maintain everything**: the user should NEVER have to update tracking files manually.
